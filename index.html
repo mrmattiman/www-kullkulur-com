@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>www.kullkulur.com</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="game-container">
@@ -11,13 +12,11 @@
         <button id="start-btn">Agħfas hawn</button>
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const startBtn = document.getElementById('start-btn');
-            startBtn.addEventListener('click', () => {
-                alert("Button works!");
-            });
-        });
-    </script>
+    <!-- Audio files -->
+    <audio id="heartbeat" src="heartbeat.mp3" loop></audio>
+    <audio id="whisper" src="whisper.mp3" loop></audio>
+
+    <!-- Script -->
+    <script src="script.js"></script>
 </body>
 </html>
