@@ -1,22 +1,23 @@
 <!DOCTYPE html>
 <html lang="mt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>www.kullkulur.com</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>www.kullkulur.com</title>
 </head>
 <body>
-  <div id="game-container">
-    <h1>www.kullkulur.com</h1>
-    <button id="start-btn">Agħfas hawn</button>
-  </div>
+    <div id="game-container">
+        <h1>www.kullkulur.com</h1>
+        <button id="start-btn">Agħfas hawn</button>
+    </div>
 
-  <!-- Audio -->
-  <audio id="heartbeat" src="heartbeat.mp3" loop></audio>
-  <audio id="whisper" src="whisper.mp3" loop></audio>
-
-  <!-- Script placed at the bottom so elements exist -->
-  <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const startBtn = document.getElementById('start-btn');
+            startBtn.addEventListener('click', () => {
+                alert("Button works!");
+            });
+        });
+    </script>
 </body>
 </html>
