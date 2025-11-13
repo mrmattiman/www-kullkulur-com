@@ -4,28 +4,34 @@ document.addEventListener("DOMContentLoaded", () => {
     const heartbeat = document.getElementById('heartbeat');
     const whisper = document.getElementById('whisper');
 
-    // Start game on click
+    // Start button
     startBtn.addEventListener('click', () => {
+        startBtn.style.display = "none"; // hide button after click
         showRedCircle();
+        // Play audio softly
+        heartbeat.volume = 0.1;
+        heartbeat.play();
+        whisper.volume = 0.05;
+        whisper.play();
     });
 
-    // RED CIRCLE
+    // RED CIRCLE QUESTION
     function showRedCircle() {
         gameContainer.innerHTML = `
-            <h1 style="color:red; font-size:120px; text-shadow:2px 2px 5px #ff0000;">🔴</h1>
-            <p style="font-size:24px;">Tħobbu l-aħmar?</p>
+            <h1 style="color:red; font-size:100px;">🔴</h1>
+            <p style="font-size:22px;">Tħobbu l-aħmar?</p>
             <button id="iva">Iva</button>
             <button id="le">Le</button>
         `;
         document.getElementById('iva').addEventListener('click', showYellowWorld);
-        document.getElementById('le').addEventListener('click', startUltimateCreepyPath);
+        document.getElementById('le').addEventListener('click', showBlueWorld);
     }
 
     // YELLOW WORLD
     function showYellowWorld() {
         gameContainer.innerHTML = `
-            <div style="background-color: yellow; padding:50px; border-radius:12px;">
-                <p style="font-size:24px;">Tħobbu l-isfar?</p>
+            <div style="background-color: yellow; padding:40px; border-radius:10px;">
+                <p style="font-size:22px;">Tħobbu l-isfar?</p>
                 <button id="yellow-iva">Iva</button>
                 <button id="yellow-le">Le</button>
             </div>
@@ -33,14 +39,14 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('yellow-iva').addEventListener('click', () => {
             gameContainer.innerHTML = `<p>Il-logħba mitmuma. Għada tirċievi r-rigal.</p>`;
         });
-        document.getElementById('yellow-le').addEventListener('click', startUltimateCreepyPath);
+        document.getElementById('yellow-le').addEventListener('click', startCreepyPath);
     }
 
     // BLUE WORLD
     function showBlueWorld() {
         gameContainer.innerHTML = `
-            <div style="background-color: blue; color:white; padding:50px; border-radius:12px;">
-                <p style="font-size:24px;">Tħobbu l-blu?</p>
+            <div style="background-color: blue; color:white; padding:40px; border-radius:10px;">
+                <p style="font-size:22px;">Tħobbu l-blu?</p>
                 <button id="blue-iva">Iva</button>
                 <button id="blue-le">Le</button>
             </div>
@@ -48,112 +54,101 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('blue-iva').addEventListener('click', () => {
             gameContainer.innerHTML = `<p>Kompli tbissem 🌈</p>`;
         });
-        document.getElementById('blue-le').addEventListener('click', startUltimateCreepyPath);
+        document.getElementById('blue-le').addEventListener('click', startCreepyPath);
     }
 
-    // ULTIMATE CREEPY PATH
-    function startUltimateCreepyPath() {
-        document.body.style.backgroundColor = '#0a000a';
-        gameContainer.classList.add('creepy');
-
-        heartbeat.volume = 0.1;
-        heartbeat.play();
-        whisper.volume = 0.05;
-        whisper.play();
+    // CREEPY PATH (Uneasy)
+    function startCreepyPath() {
+        document.body.style.backgroundColor = "#0a000a"; // dark background
+        gameContainer.style.transition = "all 0.5s ease";
+        gameContainer.style.color = "#ff9999";
 
         gameContainer.innerHTML = `
-            <p style="color:#ff9999; font-size:24px;">Għaliex għażilt Le?</p>
-            <input type="text" id="reason" placeholder="Ikteb hawn..." style="font-size:18px; padding:5px; width:60%;"/>
+            <p style="font-size:22px;">Għaliex għażilt Le?</p>
+            <input type="text" id="reason" placeholder="Ikteb hawn..." style="font-size:18px; padding:5px; width:60%; margin-top:10px;">
             <button id="submit-reason" style="font-size:18px; padding:5px 15px; margin-top:10px;">Ibgħat</button>
-            <p id="feedback" style="margin-top:20px; opacity:0; color:#ff6666; font-size:20px;"></p>
+            <p id="feedback" style="margin-top:20px; opacity:0; font-size:20px;"></p>
         `;
 
         document.getElementById('submit-reason').addEventListener('click', () => {
             const reason = document.getElementById('reason').value.trim();
             const feedback = document.getElementById('feedback');
-
             feedback.innerText = reason === "" ? 
-                "hemm xi ħaġa ħdejk." : 
-                `…għażilt: "${reason}" qed tara?`;
+                "għaliex?" : 
+                `…għażilt: "${reason}"qed tara?`;
 
-            let opacity = 0;
-            let fade = setInterval(() => {
-                opacity += 0.01;
-                feedback.style.opacity = opacity;
-                if(opacity >= 1) clearInterval(fade);
-            }, 30);
-
-            setTimeout(showUltimateCreepyMessages, 2500);
+            fadeIn(feedback, () => {
+                showCreepyMessages();
+            });
         });
     }
 
-    // CREEPY MESSAGES
-    function showUltimateCreepyMessages() {
+    // Fade-in helper
+    function fadeIn(element, callback) {
+        let opacity = 0;
+        element.style.opacity = 0;
+        const fade = setInterval(() => {
+            opacity += 0.02;
+            element.style.opacity = opacity;
+            if(opacity >= 1) {
+                clearInterval(fade);
+                if(callback) callback();
+            }
+        }, 30);
+    }
+
+    // Creepy messages sequence
+    function showCreepyMessages() {
         const messages = [
-            'xi ħaġa qed tħares.',
-            'ma tistax tmur lura kif kont qabel.',
-            'ħares warajk.',
-            'mhux qed tarah?',
-            'qisu ma jidhirx.',
-            'qiegħed ħdejk bħalissa.',
-            'qiegħed iħares dirett ġo għajnejk.'
+            "…xi ħaġa qed tħares.",
+            "…ma tistax tmur lura.",
+            "qiegħda tħares lejk.",
+            "ħares warajk.",
+            "mhux qed tara?",
+            "għaliex għamilt hekk?"
         ];
 
-        gameContainer.innerHTML = `<p id="creepy-text" style="opacity:0; font-size:24px; color:#ff9999;"></p>`;
+        gameContainer.innerHTML = `<p id="creepy-text" style="opacity:0; font-size:22px;"></p>`;
         let creepyText = document.getElementById('creepy-text');
         let index = 0;
 
-        function showNextMessage() {
+        function showNext() {
             if(index >= messages.length) {
-                ultimateFlickerGlitch();
+                finalUneasyMessage();
                 return;
             }
 
-            let fontSizes = [22,24,26,28,30,32,34];
-            let fonts = ["Arial","Verdana","Courier New","Georgia","Impact","Lucida Console"];
-            creepyText.style.fontSize = fontSizes[Math.floor(Math.random()*fontSizes.length)] + "px";
+            // Subtle font and color changes
+            const fonts = ["Arial","Verdana","Courier New","Georgia"];
+            const sizes = [22,24,26];
             creepyText.style.fontFamily = fonts[Math.floor(Math.random()*fonts.length)];
-            creepyText.style.textShadow = `${Math.floor(Math.random()*5)}px ${Math.floor(Math.random()*5)}px 8px #ff0000`;
+            creepyText.style.fontSize = sizes[Math.floor(Math.random()*sizes.length)] + "px";
+            creepyText.style.color = `rgb(${200+Math.floor(Math.random()*55)},0,0)`;
+            creepyText.style.opacity = 0;
 
             creepyText.innerText = messages[index];
-            let opacity = 0;
-            let fade = setInterval(() => {
-                opacity += 0.01;
-                creepyText.style.opacity = opacity;
-                if(opacity >= 1) clearInterval(fade);
-            }, 30);
-
-            index++;
-            setTimeout(showNextMessage, 1800);
+            fadeIn(creepyText, () => {
+                setTimeout(() => {
+                    index++;
+                    showNext();
+                }, 1500);
+            });
         }
 
-        showNextMessage();
+        showNext();
     }
 
-    // FINAL FLICKER & FONT JITTER
-    function ultimateFlickerGlitch() {
-        let count = 0;
-        let interval = setInterval(() => {
-            gameContainer.style.opacity = (count % 2 === 0) ? 0.3 : 1;
-            let r = Math.floor(Math.random()*50);
-            let b = Math.floor(Math.random()*50);
-            document.body.style.backgroundColor = `rgb(${r},0,${b})`;
-            gameContainer.style.textShadow = `${Math.floor(Math.random()*5)}px ${Math.floor(Math.random()*5)}px 8px #ff0000`;
-            count++;
-            if(count > 20) clearInterval(interval);
-        }, 150);
+    // Final uneasy message
+    function finalUneasyMessage() {
+        gameContainer.innerHTML = `<p id="final-msg" style="font-size:26px; color:#ff6666;">dejjem ħa tkun qed tħares. qatt mhux ħa titbiegħed minnek.</p>`;
+        const finalMsg = document.getElementById('final-msg');
 
-        setTimeout(() => {
-            gameContainer.innerHTML = `<p id="final-warning" style="color:#ff3333; font-size:32px;">…tħossok imsawwat u ma tistax tmur lura…</p>`;
-            let finalText = document.getElementById('final-warning');
-            setInterval(() => {
-                let fontSizes = [30,32,34,36,38];
-                let fonts = ["Arial","Verdana","Courier New","Georgia","Impact","Lucida Console"];
-                finalText.style.fontSize = fontSizes[Math.floor(Math.random()*fontSizes.length)] + "px";
-                finalText.style.fontFamily = fonts[Math.floor(Math.random()*fonts.length)];
-                finalText.style.color = `rgb(${200+Math.floor(Math.random()*55)},0,0)`;
-            }, 300);
-        }, 3000);
+        // Slow subtle font jitter
+        setInterval(() => {
+            const fonts = ["Arial","Verdana","Courier New","Georgia"];
+            const sizes = [26,28,30];
+            finalMsg.style.fontFamily = fonts[Math.floor(Math.random()*fonts.length)];
+            finalMsg.style.fontSize = sizes[Math.floor(Math.random()*sizes.length)] + "px";
+        }, 500);
     }
-
 });
